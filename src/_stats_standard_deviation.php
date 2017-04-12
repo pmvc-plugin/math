@@ -13,31 +13,34 @@ class StatsStandardDeviation
 {
     function __invoke(array $a, $isSample=false, $valueLocator=null)
     {
-        $n = count($a);
-        if ($n === 0) {
-            return !trigger_error('The array has zero elements');
-        }
-        if ($isSample && $n === 1) {
-            return !trigger_error('The array has only 1 element');
-        }
         if (is_null($valueLocator)) {
             $valueLocator = function($v) {
                 return $v;
             };
         }
         $total = 0;
+        $arr = [];
         foreach ($a as $val) {
-            $total += $valueLocator($val);
+            $val = $valueLocator($val);
+            $total += $val;
+            $arr[] = $val;
         }
+        $n = count($arr);
         $mean = $total / $n;
+        if ($n === 0) {
+            return !trigger_error('The array has zero elements');
+        }
+        if ($isSample) {
+            if ($n === 1) {
+                return !trigger_error('The array has only 1 element');
+            }
+            --$n;
+        }
         $carry = 0.0;
-        foreach ($a as $val) {
+        foreach ($arr as $val) {
             $d = $val - $mean;
             $carry += $d * $d;
         };
-        if ($isSample) {
-           --$n;
-        }
         return sqrt($carry / $n);
     }
 }
