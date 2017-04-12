@@ -11,7 +11,7 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\StatsStandardDeviation';
 
 class StatsStandardDeviation
 {
-    function __invoke(array $a, $isSample=false)
+    function __invoke(array $a, $isSample=false, $valueLocator=null)
     {
         $n = count($a);
         if ($n === 0) {
@@ -20,7 +20,16 @@ class StatsStandardDeviation
         if ($isSample && $n === 1) {
             return !trigger_error('The array has only 1 element');
         }
-        $mean = array_sum($a) / $n;
+        if (is_null($valueLocator)) {
+            $valueLocator = function($v) {
+                return $v;
+            };
+        }
+        $total = 0;
+        foreach ($a as $val) {
+            $total += $valueLocator($val);
+        }
+        $mean = $total / $n;
         $carry = 0.0;
         foreach ($a as $val) {
             $d = $val - $mean;
