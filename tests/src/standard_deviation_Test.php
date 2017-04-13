@@ -9,7 +9,7 @@ use PHPUnit_Framework_TestCase;
  * https://www.easycalculation.com/statistics/standard-deviation.php
  */
 
-class StatsStandardDeviationTest
+class StandardDeviationTest
     extends PHPUnit_Framework_TestCase
 {
     private $_plug = 'math';
@@ -24,9 +24,9 @@ class StatsStandardDeviationTest
             18
         ];
         $population = $plug->
-        stats_standard_deviation($nums);
+        standard_deviation($nums);
         $sample = $plug->
-        stats_standard_deviation($nums, true);
+        standard_deviation($nums, true);
         //var_dump($population, $sample);
         $this->assertEquals(3.35, round($population, 2));
         $this->assertEquals(3.74, round($sample, 2));
