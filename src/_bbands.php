@@ -57,19 +57,18 @@ class BBands
         };
     }
 
-    function calculateBbands($avg, $xLocator, $yLocator = null)
+    function calculateBbands($avg, $xLocator)
     {
-        if (is_null($yLocator)) {
-            $yLocator = $this->getDefaultValueLocator();
-        }
         $area = [];
         foreach ($avg as $a) {
-            $val = $yLocator($a);
-            $standardDeviation = $a['standardDeviation'];
+            //it should have error when miss mean
+            $val = (float)$a['mean']; 
+            //it should have error when miss standardDeviation
+            $standardDeviation = (float)$a['standardDeviation']; 
             $area[] = [
                 'x'  => $xLocator($a),
-                'y0' => $val + $standardDeviation*2,
-                'y1' => $val - $standardDeviation*2,
+                'y0' => $val - $standardDeviation*2, //small num
+                'y1' => $val + $standardDeviation*2, //large num
             ];
         }
         return $area;
