@@ -6,58 +6,63 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\BBands';
 
 class BBands
 {
-    function __invoke()
+    public function __invoke()
     {
         return $this;
     }
 
-    function calculateAvg($data, array $avgs, $valueLocator = null)
+    public function calculateAvg($data, array $avgs, $valueLocator = null)
     {
         if (is_null($valueLocator)) {
-            $valueLocator = $this->getDefaultValueLocator();
+            $valueLocator = $this->_getDefaultValueLocator();
         }
         $avgTemp = [];
         $arrTemp = [];
         foreach ($data as $d) {
             foreach ($avgs as $avg) {
                 $arrTemp[$avg][] = $valueLocator($d);
-                if (count($arrTemp[$avg]) >= $avg) {
-                    if (is_array($d) || is_object($d)) {
-                        $newD = new \PMVC\HashMap($d);
-                    } else {
-                        $newD = [];
-                    }
-                    $newD = \PMVC\set(
-                        $newD,
-                        [
-                            'mean'=> array_sum(
-                                $arrTemp[$avg]
-                            ) / $avg,
-                            'standardDeviation'=>
-                                $this->
-                                caller->
-                                standard_deviation(
-                                    $arrTemp[$avg],
-                                    true
-                                )
-                        ]
-                    );
-                    $avgTemp[$avg][] = \PMVC\get($newD);
-                    $arrTemp[$avg] = [];
+                $count = count($arrTemp[$avg]);
+                if ($count >= $avg) {
+                    $avgTemp[$avg][] = $this->_countAvg($arrTemp[$avg], $d);
+                    array_shift($arrTemp[$avg]);
                 }
             }
         }
         return $avgTemp;
     }
 
-    function getDefaultValueLocator()
+    private function _countAvg(array $arr, $d)
+    {
+        if (is_array($d) || is_object($d)) {
+            $newD = new \PMVC\HashMap($d);
+        } else {
+            $newD = [];
+        }
+        $newD = \PMVC\set(
+            $newD,
+            [
+                'mean'=>
+                    round(array_sum($arr) / count($arr),2),
+                'standardDeviation'=>
+                    $this->
+                    caller->
+                    standard_deviation(
+                        $arr,
+                        true
+                    )
+            ]
+        );
+        return \PMVC\get($newD);
+    }
+
+    private function _getDefaultValueLocator()
     {
         return function ($d) {
             return $d;
         };
     }
 
-    function calculateBbands($avg, $xLocator)
+    public function calculateBbands($avg, $xLocator)
     {
         $area = [];
         foreach ($avg as $a) {
