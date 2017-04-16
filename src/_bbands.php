@@ -23,7 +23,10 @@ class BBands
                 $arrTemp[$avg][] = $valueLocator($d);
                 $count = count($arrTemp[$avg]);
                 if ($count >= $avg) {
-                    $avgTemp[$avg][] = $this->_countAvg($arrTemp[$avg], $d);
+                    $avgTemp[$avg][] = $this->_countAvg(
+                        $arrTemp[$avg],
+                        $d
+                    );
                     array_shift($arrTemp[$avg]);
                 }
             }
@@ -62,20 +65,31 @@ class BBands
         };
     }
 
-    public function calculateBbands($avg, $xLocator)
+    public function calculateBbands($avg, $xLocator, $valueLocator=null)
     {
-        $area = [];
+        $areas = [];
         foreach ($avg as $a) {
             //it should have error when miss mean
-            $val = (float)$a['mean']; 
+            $mean = (float)$a['mean']; 
             //it should have error when miss standardDeviation
             $standardDeviation = (float)$a['standardDeviation']; 
-            $area[] = [
+
+            $lowerBB = $mean - $standardDeviation*2;
+            $upperBB = $mean + $standardDeviation*2;
+            $width = round(($upperBB - $lowerBB) / $mean,4) * 100;
+
+            $area = [
                 'x'  => $xLocator($a),
-                'y0' => $val - $standardDeviation*2, //small num
-                'y1' => $val + $standardDeviation*2, //large num
+                'y0' => $lowerBB, //small num
+                'y1' => $upperBB, //large num
+                'width' => $width,
             ];
+            if (!is_null($valueLocator)) {
+                $value = $valueLocator($a);
+                $area['b'] = round(($value - $lowerBB) / ($upperBB - $lowerBB), 4) * 100;
+            }
+            $areas[] = $area;
         }
-        return $area;
+        return $areas;
     }
 }
