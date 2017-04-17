@@ -18,15 +18,19 @@ class BBands
         }
         $avgTemp = [];
         $arrTemp = [];
+        $lastTemp = [];
         foreach ($data as $d) {
             foreach ($avgs as $avg) {
                 $arrTemp[$avg][] = $valueLocator($d);
                 $count = count($arrTemp[$avg]);
                 if ($count >= $avg) {
-                    $avgTemp[$avg][] = $this->_countAvg(
+                    $avgCountResult = $this->_countAvg(
                         $arrTemp[$avg],
-                        $d
+                        $d,
+                        \PMVC\get($lastTemp, $avg) 
                     );
+                    $avgTemp[$avg][] = $avgCountResult;
+                    $lastTemp[$avg] = $avgCountResult;
                     array_shift($arrTemp[$avg]);
                 }
             }
@@ -34,26 +38,36 @@ class BBands
         return $avgTemp;
     }
 
-    private function _countAvg(array $arr, $d)
+    private function _countAvg(array $arr, $d, $last)
     {
         if (is_array($d) || is_object($d)) {
             $newD = new \PMVC\HashMap($d);
         } else {
             $newD = [];
         }
+        $mean = round(array_sum($arr) / count($arr),2);
+        $params = [
+            'mean'=>
+                $mean,
+            'standardDeviation'=>
+                $this->
+                caller->
+                standard_deviation(
+                    $arr,
+                    true
+                )
+        ];
+        if ($last) {
+            $lastMean = \PMVC\get($last, 'mean');
+            $allMean = $lastMean + $mean;
+            $params['slope'] = round(
+                ($mean/$allMean - $lastMean/$allMean),
+                4 
+            ) * 100;
+        }
         $newD = \PMVC\set(
             $newD,
-            [
-                'mean'=>
-                    round(array_sum($arr) / count($arr),2),
-                'standardDeviation'=>
-                    $this->
-                    caller->
-                    standard_deviation(
-                        $arr,
-                        true
-                    )
-            ]
+            $params
         );
         return \PMVC\get($newD);
     }
@@ -68,6 +82,8 @@ class BBands
     public function calculateBbands($avg, $xLocator, $valueLocator=null)
     {
         $areas = [];
+        $lastWidth = null;
+        $lastBB = null;
         foreach ($avg as $a) {
             //it should have error when miss mean
             $mean = (float)$a['mean']; 
@@ -83,10 +99,24 @@ class BBands
                 'y0' => $lowerBB, //small num
                 'y1' => $upperBB, //large num
                 'width' => $width,
+                'mean' => $mean,
+                'standardDeviation' => $standardDeviation,
             ];
+
+            // lastWidth
+            if (!is_null($lastWidth)) {
+                $area['widthDiff'] = round($width - $lastWidth, 2);
+            }
+            $lastWidth = $width;
+
             if (!is_null($valueLocator)) {
                 $value = $valueLocator($a);
-                $area['b'] = round(($value - $lowerBB) / ($upperBB - $lowerBB), 4) * 100;
+                $area['bbands'] = round(($value - $lowerBB) / ($upperBB - $lowerBB), 4) * 100;
+                $area['bbandsData'] = $value;
+                if (!is_null($lastBB)) {
+                    $area['bbandsDiff'] = round($area['bbands'] - $lastBB, 2);
+                }
+                $lastBB = $area['bbands'];
             }
             $areas[] = $area;
         }
