@@ -98,9 +98,9 @@ class BBands
                 'x'  => $xLocator($a),
                 'y0' => $lowerBB, //small num
                 'y1' => $upperBB, //large num
-                'width' => $width,
                 'mean' => $mean,
                 'standardDeviation' => $standardDeviation,
+                'width' => $width,
             ];
 
             // lastWidth
