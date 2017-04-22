@@ -6,6 +6,9 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\BBands';
 
 class BBands
 {
+
+    private $_multiple = 2;
+
     public function __invoke()
     {
         return $this;
@@ -79,6 +82,12 @@ class BBands
         };
     }
 
+    public function setMultiple($m)
+    {
+        $this->_multiple = $m;
+        return $this;
+    }
+
     public function calculateBbands($avg, $xLocator, $valueLocator=null)
     {
         $areas = [];
@@ -90,8 +99,8 @@ class BBands
             //it should have error when miss standardDeviation
             $standardDeviation = (float)$a['standardDeviation']; 
 
-            $lowerBB = $mean - $standardDeviation*2;
-            $upperBB = $mean + $standardDeviation*2;
+            $lowerBB = $mean - $standardDeviation * $this->_multiple;
+            $upperBB = $mean + $standardDeviation * $this->_multiple;
             $width = round(($upperBB - $lowerBB) / $mean,4) * 100;
 
             $area = [
@@ -108,10 +117,13 @@ class BBands
                 $area['widthDiff'] = round($width - $lastWidth, 2);
             }
             $lastWidth = $width;
-
             if (!is_null($valueLocator)) {
                 $value = $valueLocator($a);
-                $area['bbands'] = round(($value - $lowerBB) / ($upperBB - $lowerBB), 4) * 100;
+                if ($upperBB !== $lowerBB) {
+                    $area['bbands'] = round(($value - $lowerBB) / ($upperBB - $lowerBB), 4) * 100;
+                } else {
+                    $area['bbands'] = 0;
+                }
                 $area['bbandsData'] = $value;
                 if (!is_null($lastBB)) {
                     $area['bbandsDiff'] = round($area['bbands'] - $lastBB, 2);
