@@ -14,74 +14,6 @@ class BBands
         return $this;
     }
 
-    public function calculateAvg($data, array $avgs, $valueLocator = null)
-    {
-        if (is_null($valueLocator)) {
-            $valueLocator = $this->_getDefaultValueLocator();
-        }
-        $avgTemp = [];
-        $arrTemp = [];
-        $lastTemp = [];
-        foreach ($data as $d) {
-            foreach ($avgs as $avg) {
-                $arrTemp[$avg][] = $valueLocator($d);
-                $count = count($arrTemp[$avg]);
-                if ($count >= $avg) {
-                    $avgCountResult = $this->_countAvg(
-                        $arrTemp[$avg],
-                        $d,
-                        \PMVC\get($lastTemp, $avg) 
-                    );
-                    $avgTemp[$avg][] = $avgCountResult;
-                    $lastTemp[$avg] = $avgCountResult;
-                    array_shift($arrTemp[$avg]);
-                }
-            }
-        }
-        return $avgTemp;
-    }
-
-    private function _countAvg(array $arr, $d, $last)
-    {
-        if (is_array($d) || is_object($d)) {
-            $newD = new \PMVC\HashMap($d);
-        } else {
-            $newD = [];
-        }
-        $mean = round(array_sum($arr) / count($arr),2);
-        $params = [
-            'mean'=>
-                $mean,
-            'standardDeviation'=>
-                $this->
-                caller->
-                standard_deviation(
-                    $arr,
-                    true
-                )
-        ];
-        if ($last) {
-            $lastMean = \PMVC\get($last, 'mean');
-            $allMean = $lastMean + $mean;
-            $params['slope'] = round(
-                ($mean/$allMean - $lastMean/$allMean),
-                4 
-            ) * 100;
-        }
-        $newD = \PMVC\set(
-            $newD,
-            $params
-        );
-        return \PMVC\get($newD);
-    }
-
-    private function _getDefaultValueLocator()
-    {
-        return function ($d) {
-            return $d;
-        };
-    }
-
     public function setMultiple($m)
     {
         $this->_multiple = $m;
@@ -117,7 +49,7 @@ class BBands
                 $area['widthDiff'] = round($width - $lastWidth, 2);
             }
             $lastWidth = $width;
-            if (!is_null($valueLocator)) {
+            if (!is_null($valueLocator)) { // if can get raw value not necessary
                 $value = $valueLocator($a);
                 if ($upperBB !== $lowerBB) {
                     $area['bbands'] = round(($value - $lowerBB) / ($upperBB - $lowerBB), 4) * 100;

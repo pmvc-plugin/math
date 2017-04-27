@@ -4,7 +4,7 @@ namespace PMVC\PlugIn\math;
 
 use PHPUnit_Framework_TestCase;
 
-class BBandsTest
+class AvgTest
     extends PHPUnit_Framework_TestCase
 {
     private $_plug = 'math';
@@ -20,10 +20,9 @@ class BBandsTest
             18
         ];
         $avg = $plug->
-            bbands()->
-            calculateAvg($nums, [2, 4]);
+            collector($nums, [$plug->avg(2), $plug->avg(4)]);
         $test = \PMVC\value($avg, [
-            2,
+            0,
             0,
             'mean' 
         ]);
