@@ -24,11 +24,6 @@ class Avg {
 
     public function count(array $arr, $current, $last)
     {
-        if (is_array($current) || is_object($current)) {
-            $result = new \PMVC\HashMap($current);
-        } else {
-            $result = [];
-        }
         $mean = round(array_sum($arr) / count($arr),2);
         $params = [
             'mean'=>
@@ -49,10 +44,8 @@ class Avg {
                 4 
             ) * 100;
         }
-        $result = \PMVC\set(
-            $result,
-            $params
-        );
-        return \PMVC\get($result);
+        return $this->
+            math->
+            merge_data($current, $params);
     }
 }
