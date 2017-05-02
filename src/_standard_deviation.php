@@ -11,22 +11,25 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\StatsStandardDeviation';
 
 class StatsStandardDeviation
 {
-    function __invoke(array $a, $isSample=false, $valueLocator=null)
+    function __invoke(array $a, $isSample=false, $valueLocator=null, $sum = 0)
     {
-        if (is_null($valueLocator)) {
-            $valueLocator = function($v) {
-                return $v;
-            };
-        }
-        $total = 0;
-        $arr = [];
-        foreach ($a as $val) {
-            $val = $valueLocator($val);
-            $total += $val;
-            $arr[] = $val;
+        if ($sum && !$valueLocator) {
+            $arr = $a;
+        } else {
+            if (is_null($valueLocator)) {
+                $valueLocator = function($v) {
+                    return $v;
+                };
+            }
+            $arr = [];
+            foreach ($a as $val) {
+                $val = $valueLocator($val);
+                $sum += $val;
+                $arr[] = $val;
+            }
         }
         $n = count($arr);
-        $mean = $total / $n;
+        $mean = $sum / $n;
         if ($n === 0) {
             return !trigger_error('The array has zero elements');
         }

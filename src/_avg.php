@@ -24,7 +24,8 @@ class Avg {
 
     public function count(array $arr, $current, $last)
     {
-        $mean = round(array_sum($arr) / count($arr),2);
+        $sum = array_sum($arr);
+        $mean = round($sum / count($arr),2);
         $params = [
             'mean'=>
                 $mean,
@@ -33,7 +34,9 @@ class Avg {
                 math->
                 standard_deviation(
                     $arr,
-                    true
+                    true,
+                    null,
+                    $sum
                 )
         ];
         if ($last) {

@@ -31,4 +31,19 @@ class StandardDeviationTest
         $this->assertEquals(3.35, round($population, 2));
         $this->assertEquals(3.74, round($sample, 2));
     }
+
+    function testSpeedCount()
+    {
+        $plug = \PMVC\plug($this->_plug);
+        $nums = [
+            15, 
+            21,
+            21,
+            25,
+            18
+        ];
+        $population = $plug->
+        standard_deviation($nums, null, null, array_sum($nums));
+        $this->assertEquals(3.35, round($population, 2));
+    }
 }
