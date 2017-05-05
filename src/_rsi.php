@@ -25,7 +25,7 @@ class Rsi {
         $this->math = \PMVC\plug('math');
     }
 
-    public function count(array $arr, $current, $last)
+    public function count(array $arr, $current=[])
     {
         $last = array_shift($arr);
         $groupUps = [];

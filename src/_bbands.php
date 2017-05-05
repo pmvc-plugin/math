@@ -23,16 +23,16 @@ class BBands
     public function calculateBbands($avg, $xLocator, $valueLocator=null)
     {
         $areas = [];
-        $lastWidth = null;
+        $lastWidth = 0;
         $lastBB = null;
+        $sdMultiple = $this->_multiple;
         foreach ($avg as $a) {
             //it should have error when miss mean
             $mean = (float)$a['mean']; 
             //it should have error when miss standardDeviation
             $standardDeviation = (float)$a['standardDeviation']; 
-
-            $lowerBB = $mean - $standardDeviation * $this->_multiple;
-            $upperBB = $mean + $standardDeviation * $this->_multiple;
+            $lowerBB = $mean - $standardDeviation * $sdMultiple;
+            $upperBB = $mean + $standardDeviation * $sdMultiple;
             $width = round(($upperBB - $lowerBB) / $mean,4) * 100;
 
             $area = [
@@ -45,22 +45,26 @@ class BBands
             ];
 
             // lastWidth
-            if (!is_null($lastWidth)) {
-                $area['widthDiff'] = round($width - $lastWidth, 2);
+            if ($width) {
+                $area['widthDiffPercent'] = round(($width - $lastWidth) / $width, 4) * 100;
+            } else {
+                $area['widthDiffPercent'] = 0;
             }
             $lastWidth = $width;
             if (!is_null($valueLocator)) { // if can get raw value not necessary
                 $value = $valueLocator($a);
                 if ($upperBB !== $lowerBB) {
-                    $area['bbands'] = round(($value - $lowerBB) / ($upperBB - $lowerBB), 4) * 100;
+                    $bbands = round(($value - $lowerBB) / ($upperBB - $lowerBB), 4) * 100;
                 } else {
-                    $area['bbands'] = 0;
+                    $bbands = 0;
                 }
                 $area['bbandsData'] = $value;
-                if (!is_null($lastBB)) {
-                    $area['bbandsDiff'] = round($area['bbands'] - $lastBB, 2);
+                if ($lastBB) {
+                    $area['bbandsDiff'] = round($bbands - $lastBB, 2);
+                } else {
+                    $area['bbandsDiff'] = 0;
                 }
-                $lastBB = $area['bbands'];
+                $area['bbands'] = $lastBB = $bbands;
             }
             $areas[] = $area;
         }
