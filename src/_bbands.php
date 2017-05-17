@@ -8,6 +8,7 @@ class BBands
 {
 
     private $_multiple = 2;
+    private $_resetCallback;
 
     public function __invoke()
     {
@@ -17,6 +18,12 @@ class BBands
     public function setMultiple($m)
     {
         $this->_multiple = $m;
+        return $this;
+    }
+
+    public function setResetCallback($resetCallback)
+    {
+        $this->_resetCallback = $resetCallback;
         return $this;
     }
 
@@ -65,6 +72,12 @@ class BBands
                     $area['bbandsDiff'] = 0;
                 }
                 $area['bbands'] = $lastBB = $bbands;
+            }
+            if (is_callable($this->_resetCallback)) {
+                call_user_func_array(
+                    $this->_resetCallback,
+                    [&$area]
+                );
             }
             $areas[] = $area;
         }

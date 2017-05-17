@@ -6,20 +6,22 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\GetAvg';
 
 class GetAvg
 {
-    function __invoke($num)
+    function __invoke($num, $callback)
     {
-        return new Avg($num);
+        return new Avg($num, $callback);
     }
 }
 
 class Avg {
 
     public $num;
+    private $_resetCallback;
 
-    public function __construct($num)
+    public function __construct($num, $resetCallback = null)
     {
         $this->num = $num;
         $this->math = \PMVC\plug('math');
+        $this->_resetCallback = $resetCallback;
     }
 
     public function count(array $arr, $current, $last)
@@ -47,8 +49,15 @@ class Avg {
                 4 
             ) * 100;
         }
-        return $this->
+        $result =  $this->
             math->
             merge_data($current, $params);
+        if (is_callable($this->_resetCallback)) {
+            call_user_func_array(
+                $this->_resetCallback,
+                [&$result]
+            );
+        }
+        return $result;
     }
 }
