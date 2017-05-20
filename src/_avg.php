@@ -6,7 +6,7 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\GetAvg';
 
 class GetAvg
 {
-    function __invoke($num, $callback)
+    function __invoke($num, $callback=null)
     {
         return new Avg($num, $callback);
     }
