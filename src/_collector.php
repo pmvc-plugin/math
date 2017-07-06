@@ -21,6 +21,10 @@ class Collector
         $lastTemp = [];
         foreach ($operators as $oK=>$operator) {
             $arrTemp[$oK] = [];
+            if (empty($operator->num)) {
+                trigger_error('Operator should not have a zero num. '.print_r($operator, true));
+                unset($operators[$oK]);
+            }
         }
         foreach ($data as $d) {
             foreach ($operators as $oK=>$operator) {

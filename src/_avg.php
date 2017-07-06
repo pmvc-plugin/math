@@ -28,18 +28,17 @@ class Avg {
     {
         $sum = array_sum($arr);
         $mean = round($sum / count($arr),2);
+        $standardDeviation = $this->
+            math->
+            standard_deviation(
+                $arr,
+                true,
+                null,
+                $sum
+            );
         $params = [
-            'mean'=>
-                $mean,
-            'standardDeviation'=>
-                $this->
-                math->
-                standard_deviation(
-                    $arr,
-                    true,
-                    null,
-                    $sum
-                )
+            'mean'=> $mean,
+            'standardDeviation'=> $standardDeviation
         ];
         if ($last) {
             $lastMean = \PMVC\get($last, 'mean');
