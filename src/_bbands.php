@@ -40,7 +40,7 @@ class BBands
             $standardDeviation = (float)$a['standardDeviation']; 
             $lowerBB = $mean - $standardDeviation * $sdMultiple;
             $upperBB = $mean + $standardDeviation * $sdMultiple;
-            $width = round(($upperBB - $lowerBB) / $mean,4) * 100;
+            $width = round((($upperBB - $lowerBB) / $mean) * 100, 2);
 
             $area = [
                 'x'  => $xLocator($a),
@@ -53,7 +53,7 @@ class BBands
 
             // lastWidth
             if ($width) {
-                $area['widthDiffPercent'] = round(($width - $lastWidth) / $width, 4) * 100;
+                $area['widthDiffPercent'] = round((($width - $lastWidth) / $width) * 100, 2);
             } else {
                 $area['widthDiffPercent'] = 0;
             }
@@ -61,7 +61,7 @@ class BBands
             if (!is_null($valueLocator)) { // if can get raw value not necessary
                 $value = $valueLocator($a);
                 if ($upperBB !== $lowerBB) {
-                    $bbands = round(($value - $lowerBB) / ($upperBB - $lowerBB), 4) * 100;
+                    $bbands = round((($value - $lowerBB) / ($upperBB - $lowerBB)) * 100, 2);
                 } else {
                     $bbands = 0;
                 }
