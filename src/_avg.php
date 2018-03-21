@@ -44,9 +44,9 @@ class Avg {
             $lastMean = \PMVC\get($last, 'mean');
             $allMean = $lastMean + $mean;
             $params['slope'] = round(
-                ($mean/$allMean - $lastMean/$allMean),
-                4 
-            ) * 100;
+                ($mean/$allMean - $lastMean/$allMean) * 100,
+                2 
+            );
         }
         $result =  $this->
             math->

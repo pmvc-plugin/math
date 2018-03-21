@@ -45,7 +45,7 @@ class Rsi {
         $allAvg = $avgUps + $avgDowns;
         $rsi = 0;
         if ($allAvg) {
-            $rsi = round($avgUps / $allAvg, 4) * 100;
+            $rsi = round($avgUps / $allAvg * 100, 2);
         }
         return $this->
             math->
