@@ -43,10 +43,9 @@ class Avg {
         if ($last) {
             $lastMean = \PMVC\get($last, 'mean');
             $allMean = $lastMean + $mean;
-            $params['slope'] = round(
-                ($mean/$allMean - $lastMean/$allMean) * 100,
-                2 
-            );
+            $params['slope'] = $this->
+                math->
+                count_slope($lastMean, $mean, $allMean);
         }
         $result =  $this->
             math->
