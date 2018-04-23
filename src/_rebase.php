@@ -19,7 +19,7 @@ class rebase
     {
         $multiple = $base / 100;
         foreach ($items as &$v) {
-            $v /= $multiple;
+            $v = round($v / $multiple);
         }
         return $items;
     }
@@ -28,7 +28,7 @@ class rebase
     {
         $multiple = 100 / $base;
         foreach ($items as &$v) {
-            $v *= $multiple;
+            $v = round($v * $multiple);
         }
         return $items;
     }
