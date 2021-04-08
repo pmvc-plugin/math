@@ -1,18 +1,21 @@
 {
-    "name": "pmvc-plugin/math",
-    "description": "Math Library",
-    "type": "library",
-    "homepage": "https://github.com/pmvc/pmvc",
-    "keywords": ["math", "pmvc", "plug-in"],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Hill",
-            "email": "hill@kimo.com"
-        }
-    ],
-    "require": {
-        "pmvc/pmvc": "*"
-    },
-    "minimum-stability": "dev"
+  "name": "pmvc-plugin/math",
+  "description": "Math Library",
+  "type": "library",
+  "homepage": "https://github.com/pmvc/pmvc",
+  "keywords": ["math", "pmvc", "plug-in"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Hill",
+      "email": "hill@kimo.com"
+    }
+  ],
+  "require": {
+    "pmvc/pmvc": "*"
+  },
+  "require-dev": {
+    "pmvc-plugin/unit": "*"
+  },
+  "minimum-stability": "dev"
 }
