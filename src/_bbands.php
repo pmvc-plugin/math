@@ -26,6 +26,12 @@ class BBands
         $this->_resetCallback = $resetCallback;
         return $this;
     }
+
+    private function _round($num)
+    {
+        return round($num, 2);
+    }
+
     /**
      * @param array    $avg
      * @param callable $xLocator     date locator
@@ -37,17 +43,17 @@ class BBands
         $lastWidth = 0;
         $lastBB = null;
         $sdMultiple = $this->_multiple;
-        foreach ($avg as $a) {
+        foreach ($avg as $aIndex=>$a) {
             //it should have error when miss mean
             $mean = (float)$a['mean']; 
             //it should have error when miss standardDeviation
-            $standardDeviation = (float)$a['standardDeviation']; 
-            $lowerBB = $mean - $standardDeviation * $sdMultiple;
-            $upperBB = $mean + $standardDeviation * $sdMultiple;
-            $width = round((($upperBB - $lowerBB) / $mean) * 100, 2);
+            $standardDeviation = $this->_round($a['standardDeviation']); 
+            $lowerBB = $this->_round($mean - $standardDeviation * $sdMultiple);
+            $upperBB = $this->_round($mean + $standardDeviation * $sdMultiple);
+            $width = $this->_round((($upperBB - $lowerBB) / $mean) * 100);
 
             $area = [
-                'x'  => $xLocator($a),
+                'x'  => $xLocator($a, $aIndex),
                 'y0' => $lowerBB, //small num
                 'y1' => $upperBB, //large num
                 'mean' => $mean,
