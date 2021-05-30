@@ -27,11 +27,6 @@ class BBands
         return $this;
     }
 
-    private function _round($num)
-    {
-        return round($num, 2);
-    }
-
     /**
      * @param array    $avg
      * @param callable $xLocator     date locator
@@ -43,14 +38,15 @@ class BBands
         $lastWidth = 0;
         $lastBB = null;
         $sdMultiple = $this->_multiple;
+        $caller = $this->caller;
         foreach ($avg as $aIndex=>$a) {
             //it should have error when miss mean
             $mean = (float)$a['mean']; 
             //it should have error when miss standardDeviation
-            $standardDeviation = $this->_round($a['standardDeviation']); 
-            $lowerBB = $this->_round($mean - $standardDeviation * $sdMultiple);
-            $upperBB = $this->_round($mean + $standardDeviation * $sdMultiple);
-            $width = $this->_round((($upperBB - $lowerBB) / $mean) * 100);
+            $standardDeviation = $caller->round($a['standardDeviation']); 
+            $lowerBB = $caller->round($mean - $standardDeviation * $sdMultiple);
+            $upperBB = $caller->round($mean + $standardDeviation * $sdMultiple);
+            $width = $caller->round((($upperBB - $lowerBB) / $mean) * 100);
 
             $area = [
                 'x'  => $xLocator($a, $aIndex),

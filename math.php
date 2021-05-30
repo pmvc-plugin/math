@@ -11,4 +11,10 @@ interface CounterInterface
 
 class math extends \PMVC\PlugIn
 {
+    public function init()
+    {
+        if (!is_numeric($this['precision'])) {
+            $this['precision'] = 2;
+        }
+    }
 }
