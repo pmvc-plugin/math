@@ -26,7 +26,11 @@ class BBands
         $this->_resetCallback = $resetCallback;
         return $this;
     }
-
+    /**
+     * @param array    $avg
+     * @param callable $xLocator     date locator
+     * @param callable $valueLocator value locator
+     */
     public function calculateBbands($avg, $xLocator, $valueLocator=null)
     {
         $areas = [];
