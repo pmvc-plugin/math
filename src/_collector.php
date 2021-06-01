@@ -19,9 +19,11 @@ class Collector
              * How many itmes should collect.
              */
             if (empty($operator->num)) {
-                trigger_error(
-                    'Operator should not have a zero num. ' .
-                        print_r($operator, true)
+                \PMVC\triggerJson(
+                  'Operator should not have a zero num.',
+                  [
+                    'operator' => get_class($operator)
+                  ] 
                 );
                 unset($operators[$oK]);
             }
