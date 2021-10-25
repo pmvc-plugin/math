@@ -18,7 +18,7 @@ class EmaTest extends TestCase
             8,
             12
         ];
-        $actural = $plug->calEma($nums, 2);
+        $actural = $plug->cal_ema($nums, 2);
         $expected = [
             2,
             3.33,

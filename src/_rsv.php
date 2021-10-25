@@ -28,7 +28,7 @@ class RSV {
     {
         $this->num = $days;
         $this->math = \PMVC\plug('math');
-        $this->_locator = $this->math->stockLocator($customLocator);
+        $this->_locator = $this->math->stock_locator($customLocator);
     }
 
     private function _ma(array $arr, $period, $prev=null)
