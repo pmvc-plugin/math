@@ -13,7 +13,7 @@ class MergeData
         } else {
             $result = [];
         }
-        $result = \PMVC\set(
+        \PMVC\set(
             $result,
             $new
         );

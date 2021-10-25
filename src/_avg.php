@@ -28,6 +28,7 @@ class Avg {
     {
         $sum = array_sum($arr);
         $mean = $this->math->round($sum / count($arr));
+
         $standardDeviation = $this->
             math->
             standard_deviation(
@@ -56,6 +57,7 @@ class Avg {
                 [&$result]
             );
         }
+
         return $result;
     }
 }

@@ -39,11 +39,15 @@ class BBands
         $lastBB = null;
         $sdMultiple = $this->_multiple;
         $caller = $this->caller;
+
         foreach ($avg as $aIndex=>$a) {
             //it should have error when miss mean
-            $mean = (float)$a['mean']; 
+            $mean = (float)\PMVC\get($a, 'mean'); 
+            if (!$mean) {
+              continue;
+            }
             //it should have error when miss standardDeviation
-            $standardDeviation = $caller->round($a['standardDeviation']); 
+            $standardDeviation = $caller->round(\PMVC\get($a, 'standardDeviation')); 
             $lowerBB = $caller->round($mean - $standardDeviation * $sdMultiple);
             $upperBB = $caller->round($mean + $standardDeviation * $sdMultiple);
             $width = $caller->round((($upperBB - $lowerBB) / $mean) * 100);

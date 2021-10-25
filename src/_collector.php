@@ -37,8 +37,10 @@ class Collector
             return $isStartToCount[$opK];
         };
 
+
         $lastTemp = [];
         $results = [];
+
         foreach ($data as $d) {
             $myData = $valueLocator($d);
             foreach ($operators as $opK => $operator) {
