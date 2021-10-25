@@ -2,11 +2,10 @@
 
 namespace PMVC\PlugIn\math;
 
-${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\BBands';
+${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\BBands';
 
 class BBands
 {
-
     private $_multiple = 2;
     private $_resetCallback;
 
@@ -32,7 +31,7 @@ class BBands
      * @param callable $xLocator     date locator
      * @param callable $valueLocator value locator
      */
-    public function calculateBbands($avg, $xLocator, $valueLocator=null)
+    public function calculateBbands($avg, $xLocator, $valueLocator = null)
     {
         $areas = [];
         $lastWidth = 0;
@@ -40,20 +39,33 @@ class BBands
         $sdMultiple = $this->_multiple;
         $caller = $this->caller;
 
-        foreach ($avg as $aIndex=>$a) {
-            //it should have error when miss mean
-            $mean = (float)\PMVC\get($a, 'mean'); 
+        foreach ($avg as $aIndex => $a) {
+            $mean = (float) \PMVC\get($a, 'mean');
             if (!$mean) {
-              continue;
+                //it should have error when miss mean
+                return \PMVC\triggerJson(
+                    'Count bbands faild, mean is not correct.',
+                    $a,
+                    E_USER_WARNING
+                );
             }
-            //it should have error when miss standardDeviation
-            $standardDeviation = $caller->round(\PMVC\get($a, 'standardDeviation')); 
+            $standardDeviation = $caller->round(
+                \PMVC\get($a, 'standardDeviation')
+            );
+            if (!$standardDeviation) {
+                //it should have error when miss standardDeviation
+                return \PMVC\triggerJson(
+                    'Count bbands faild, standardDeviation is not correct.',
+                    $a,
+                    E_USER_WARNING
+                );
+            }
             $lowerBB = $caller->round($mean - $standardDeviation * $sdMultiple);
             $upperBB = $caller->round($mean + $standardDeviation * $sdMultiple);
             $width = $caller->round((($upperBB - $lowerBB) / $mean) * 100);
 
             $area = [
-                'x'  => $xLocator($a, $aIndex),
+                'x' => $xLocator($a, $aIndex),
                 'y0' => $lowerBB, //small num
                 'y1' => $upperBB, //large num
                 'mean' => $mean,
@@ -63,15 +75,22 @@ class BBands
 
             // lastWidth
             if ($width) {
-                $area['widthDiffPercent'] = round((($width - $lastWidth) / $width) * 100, 2);
+                $area['widthDiffPercent'] = round(
+                    (($width - $lastWidth) / $width) * 100,
+                    2
+                );
             } else {
                 $area['widthDiffPercent'] = 0;
             }
             $lastWidth = $width;
-            if (!is_null($valueLocator)) { // if can get raw value not necessary
+            if (!is_null($valueLocator)) {
+                // if can get raw value not necessary
                 $value = $valueLocator($a);
                 if ($upperBB !== $lowerBB) {
-                    $bbands = round((($value - $lowerBB) / ($upperBB - $lowerBB)) * 100, 2);
+                    $bbands = round(
+                        (($value - $lowerBB) / ($upperBB - $lowerBB)) * 100,
+                        2
+                    );
                 } else {
                     $bbands = 0;
                 }
@@ -84,10 +103,7 @@ class BBands
                 $area['bbands'] = $lastBB = $bbands;
             }
             if (is_callable($this->_resetCallback)) {
-                call_user_func_array(
-                    $this->_resetCallback,
-                    [&$area]
-                );
+                call_user_func_array($this->_resetCallback, [&$area]);
             }
             $areas[] = $area;
         }
