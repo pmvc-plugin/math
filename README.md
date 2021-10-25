@@ -1,6 +1,6 @@
 [![Latest Stable Version](https://poser.pugx.org/pmvc-plugin/math/v/stable)](https://packagist.org/packages/pmvc-plugin/math) 
 [![Latest Unstable Version](https://poser.pugx.org/pmvc-plugin/math/v/unstable)](https://packagist.org/packages/pmvc-plugin/math) 
-[![Build Status](https://travis-ci.org/pmvc-plugin/math.svg?branch=master)](https://travis-ci.org/pmvc-plugin/math)
+[![CircleCI](https://circleci.com/gh/pmvc-plugin/math/tree/master.svg?style=svg)](https://circleci.com/gh/pmvc-plugin/math/tree/master)
 [![License](https://poser.pugx.org/pmvc-plugin/math/license)](https://packagist.org/packages/pmvc-plugin/math)
 [![Total Downloads](https://poser.pugx.org/pmvc-plugin/math/downloads)](https://packagist.org/packages/pmvc-plugin/math) 
 
