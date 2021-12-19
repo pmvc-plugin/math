@@ -52,7 +52,7 @@ class BBands
             $standardDeviation = $caller->round(
                 \PMVC\get($a, 'standardDeviation')
             );
-            if (!$standardDeviation) {
+            if (!is_numeric($standardDeviation)) {
                 //it should have error when miss standardDeviation
                 return \PMVC\triggerJson(
                     'Count bbands faild, standardDeviation is not correct.',
