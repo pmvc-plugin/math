@@ -8,6 +8,9 @@ class Collector
 {
     public function __invoke($data, array $operators, $valueLocator = null)
     {
+        if (empty($data)) {
+            return false;
+        }
         if (is_null($valueLocator)) {
             $valueLocator = $this->caller->default_value_locator();
         }
